@@ -10,19 +10,19 @@ mongoose.Promise = Promise;
 const File = mongoose.model("File", {
   description: {
     type: String,
-    maxlength: 140
+    maxlength: 140,
   },
   name: {
     type: String,
-    maxlength: 30
+    maxlength: 30,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   type: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 const port = process.env.PORT || 3000;
@@ -34,22 +34,21 @@ app.use(bodyParser.json());
 
 // Start defining your routes here
 app.get("/files", async (req, res) => {
-  const files = await File.find()
-    .sort({ createdAt: "desc" })
-    .limit(20)
-    .exec();
+  const files = await File.find().sort({ createdAt: "desc" }).limit(20).exec();
   res.json(files);
 });
 
 app.post("/files", async (req, res) => {
   const { name, description, type } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   const file = new File({ name, description, type });
   try {
     const savedFile = await file.save();
     res.status(201).json(savedFile);
   } catch (err) {
-    res.status(400).json({ message: "Could not upload file", error: err.errors });
+    res
+      .status(400)
+      .json({ message: "Could not upload file", error: err.errors });
   }
 });
 
